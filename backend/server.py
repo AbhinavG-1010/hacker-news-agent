@@ -208,16 +208,21 @@ Provide a concise summary addressing the user's query."""
                 return "I couldn't find any stories matching your request. Please try a different query."
         
         # Prepare stories data for the LLM
-        stories_text = "\n\n".join([
-            f"Story {i+1}:\n"
-            f"Title: {story.get('title', 'N/A')}\n"
-            f"URL: {story.get('url', f\"https://news.ycombinator.com/item?id={story.get('id')}\")}\n"
-            f"Score: {story.get('score', 0)} points\n"
-            f"Author: {story.get('by', 'unknown')}\n"
-            f"Comments: {story.get('descendants', 0)}\n"
-            f"Posted: {datetime.fromtimestamp(story.get('time', 0)).strftime('%Y-%m-%d %H:%M')}"
-            for i, story in enumerate(stories)
-        ])
+        story_parts = []
+        for i, story in enumerate(stories):
+            story_url = story.get('url', f"https://news.ycombinator.com/item?id={story.get('id')}")
+            story_time = datetime.fromtimestamp(story.get('time', 0)).strftime('%Y-%m-%d %H:%M')
+            story_text = (
+                f"Story {i+1}:\n"
+                f"Title: {story.get('title', 'N/A')}\n"
+                f"URL: {story_url}\n"
+                f"Score: {story.get('score', 0)} points\n"
+                f"Author: {story.get('by', 'unknown')}\n"
+                f"Comments: {story.get('descendants', 0)}\n"
+                f"Posted: {story_time}"
+            )
+            story_parts.append(story_text)
+        stories_text = "\n\n".join(story_parts)
         
         # Create context-aware prompt
         context = f"User asked: '{query}'\n"
