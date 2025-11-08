@@ -342,11 +342,13 @@ agent = HackerNewsAgent()
 async def root():
     return {
         "message": "HackerNews AI Agent API",
-        "version": "1.0",
+        "version": "2.0",
         "endpoints": {
-            "/api/agent/query": "Main agent endpoint - accepts natural language queries",
+            "/api/agent/chat": "🔥 NEW! Conversational agent - natural language input & output",
+            "/api/agent/query": "Structured agent endpoint - returns JSON data",
             "/api/health": "Health check endpoint"
         },
+        "recommended": "/api/agent/chat",
         "examples": [
             "find latest 3 news about AI",
             "summarize biggest headlines today",
@@ -361,10 +363,37 @@ async def health():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 
+@app.get("/api/agent/chat")
+async def chat_agent(q: str = Query(..., description="Natural language query for HackerNews")):
+    """
+    🔥 Conversational agent endpoint - accepts natural language and returns natural language.
+    
+    This is the recommended endpoint for direct interaction with the agent.
+    
+    Examples:
+    - /api/agent/chat?q=find latest 3 news about AI
+    - /api/agent/chat?q=summarize biggest headlines today
+    - /api/agent/chat?q=what's new about python
+    - /api/agent/chat?q=tell me about top stories today
+    """
+    try:
+        if not q or len(q.strip()) == 0:
+            raise HTTPException(status_code=400, detail="Query parameter 'q' is required")
+        
+        response = await agent.process_conversational_query(q)
+        return {"response": response, "query": q}
+        
+    except Exception as e:
+        print(f"Error processing query: {e}")
+        raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")
+
+
 @app.get("/api/agent/query")
 async def query_agent(q: str = Query(..., description="Natural language query for HackerNews")):
     """
-    Main agent endpoint that accepts natural language queries.
+    Structured agent endpoint that accepts natural language queries and returns JSON data.
+    
+    Use /api/agent/chat for natural language responses instead.
     
     Examples:
     - /api/agent/query?q=find latest 3 news about AI
