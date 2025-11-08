@@ -369,7 +369,7 @@ async def health():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 
-@app.get("/agent")
+@app.get("/api/agent")
 async def conversational_agent(query: str = Query(..., description="Natural language query for HackerNews")):
     """
     🔥 Main conversational agent endpoint - accepts natural language and returns natural language.
@@ -377,10 +377,10 @@ async def conversational_agent(query: str = Query(..., description="Natural lang
     This is the primary endpoint for direct interaction with the agent.
     
     Examples:
-    - /agent?query=find latest 3 news about AI
-    - /agent?query=summarize biggest headlines today
-    - /agent?query=what's new about python
-    - /agent?query=tell me about top stories today
+    - /api/agent?query=find latest 3 news about AI
+    - /api/agent?query=summarize biggest headlines today
+    - /api/agent?query=what's new about python
+    - /api/agent?query=tell me about top stories today
     """
     try:
         if not query or len(query.strip()) == 0:
