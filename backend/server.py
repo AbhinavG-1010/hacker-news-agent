@@ -113,12 +113,24 @@ Examples:
 - "top stories" -> {"intent": "latest", "topic": null, "count": 5, "story_type": "top"}"""
         ).with_model("openai", "gpt-4o-mini")
         
-        self.summarizer = LlmChat(
+        self.conversational_agent = LlmChat(
             api_key=EMERGENT_LLM_KEY,
-            session_id="hn-summarizer",
-            system_message="""You are a concise news summarizer. Create brief, informative summaries of HackerNews stories.
-For individual stories, provide 1-2 sentences. For multiple stories, provide a cohesive summary covering key themes.
-Focus on the most important and interesting aspects."""
+            session_id="hn-conversational",
+            system_message="""You are a helpful HackerNews assistant that responds in natural, conversational language.
+Your role is to help users discover and understand HackerNews stories.
+
+When given stories, you should:
+1. Provide a clear, conversational response
+2. Highlight the most interesting or relevant stories
+3. Include key details like scores, comments, and themes
+4. Use a friendly, informative tone
+5. Format responses clearly with proper structure
+
+For search queries: Present the stories you found and briefly describe them.
+For summarization: Provide an overview of key themes and highlights.
+For general queries: Give a helpful, informative response about what you found.
+
+Always be concise but informative. Use natural language, not JSON or technical jargon."""
         ).with_model("openai", "gpt-4o-mini")
     
     async def parse_query(self, query: str) -> Dict:
