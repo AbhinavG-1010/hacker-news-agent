@@ -44,7 +44,7 @@ curl "http://localhost:8001/api/agent/chat?q=what%27s%20trending%20on%20hacker%2
 ```
 **Response:** Natural language description of trending stories.
 
-## Setup
+## 🛠️ Setup
 
 1. Install dependencies:
 ```bash
@@ -57,34 +57,65 @@ pip install -r requirements.txt --extra-index-url https://d33sy5i8bnduwe.cloudfr
 python server.py
 ```
 
-## Technology Stack
+## 🎯 Technology Stack
 
 - **FastAPI**: Web framework
 - **HackerNews API**: Data source
-- **EmergentIntegrations**: LLM integration
-- **GPT-4o-mini**: Natural language processing and summarization
+- **EmergentIntegrations**: LLM integration library
+- **GPT-4o-mini**: Natural language processing and generation
 
-## How It Works
+## 🔄 How It Works
 
-1. User sends a natural language query
-2. Agent parses the query using LLM to extract intent and parameters
-3. Fetches relevant stories from HackerNews API
-4. Filters stories by topic if specified
-5. Generates summaries or returns structured data
-6. Returns formatted response
+1. **Input**: User sends natural language query
+2. **Parse**: Agent analyzes query to understand intent (search/summarize/latest)
+3. **Fetch**: Retrieves relevant stories from HackerNews API
+4. **Filter**: Applies topic filtering if specified
+5. **Generate**: Creates natural language response using GPT-4o-mini
+6. **Output**: Returns conversational response
 
-## Query Types
+## 💬 Query Types
 
-- **Search**: Find stories about specific topics
-- **Summarize**: Get AI summaries of headlines
-- **Latest**: Get most recent stories
+The agent understands various query formats:
 
-## Response Format
+- **Search**: "find latest 3 news about AI", "what's new about python"
+- **Summarize**: "summarize top 5 headlines", "give me an overview of today's stories"
+- **Latest**: "top stories", "what's trending on hacker news"
+- **Custom**: "tell me about the most discussed topics today"
 
-The API returns JSON with:
-- `query`: Original query
-- `intent`: Detected intent (search/summarize/latest)
-- `topic`: Extracted topic (if any)
-- `stories_count`: Number of stories found
-- `stories`: Array of story objects with title, url, score, comments, etc.
-- `summary`: AI-generated summary (for summarize intent)
+## 📤 Response Format
+
+### Conversational Endpoint (`/api/agent/chat`)
+```json
+{
+  "response": "Natural language response with story details...",
+  "query": "original query"
+}
+```
+
+### Structured Endpoint (`/api/agent/query`)
+```json
+{
+  "query": "original query",
+  "intent": "search|summarize|latest",
+  "topic": "topic name or null",
+  "stories_count": 5,
+  "stories": [...],
+  "summary": "AI summary (if applicable)"
+}
+```
+
+## 🧪 Testing
+
+Run the test script:
+```bash
+./test_agent.sh
+```
+
+## 🌐 Public Access
+
+**API URL**: `https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent/chat`
+
+**Quick Test**:
+```bash
+curl "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent/chat?q=top+stories"
+```
