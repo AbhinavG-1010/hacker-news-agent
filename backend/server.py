@@ -245,7 +245,7 @@ Please provide a natural, conversational response to the user's query.
             return "I found some stories but had trouble generating a response. Please try again."
     
     async def process_query(self, query: str) -> Dict:
-        """Main method to process user queries"""
+        """Main method to process user queries - returns structured data"""
         # Parse the query
         parsed = await self.parse_query(query)
         intent = parsed.get('intent', 'latest')
@@ -301,6 +301,37 @@ Please provide a natural, conversational response to the user's query.
                     for story in stories
                 ]
             }
+    
+    async def process_conversational_query(self, query: str) -> str:
+        """Process query and return natural language response"""
+        # Parse the query
+        parsed = await self.parse_query(query)
+        intent = parsed.get('intent', 'latest')
+        topic = parsed.get('topic')
+        count = parsed.get('count', 5)
+        story_type = parsed.get('story_type', 'top')
+        
+        # Fetch stories based on type
+        if story_type == 'new':
+            story_ids = await HackerNewsService.fetch_new_stories(limit=100)
+        elif story_type == 'best':
+            story_ids = await HackerNewsService.fetch_best_stories(limit=100)
+        else:
+            story_ids = await HackerNewsService.fetch_top_stories(limit=100)
+        
+        # Fetch story details
+        stories = await HackerNewsService.fetch_stories_details(story_ids[:50])
+        
+        # Filter by topic if needed
+        if topic:
+            stories = await self.filter_stories_by_topic(stories, topic)
+        
+        # Limit to requested count
+        stories = stories[:count]
+        
+        # Generate conversational response
+        response = await self.generate_conversational_response(stories, query, intent, topic)
+        return response
 
 
 # Initialize agent
