@@ -193,11 +193,56 @@ Provide a concise summary addressing the user's query."""
         
         try:
             user_message = UserMessage(text=prompt)
-            response = await self.summarizer.send_message(user_message)
+            response = await self.conversational_agent.send_message(user_message)
             return response
         except Exception as e:
             print(f"Error generating summary: {e}")
             return "Error generating summary."
+    
+    async def generate_conversational_response(self, stories: List[Dict], query: str, intent: str, topic: Optional[str]) -> str:
+        """Generate a natural language conversational response"""
+        if not stories:
+            if topic:
+                return f"I couldn't find any HackerNews stories about '{topic}' at the moment. You might want to try a different search term or check back later."
+            else:
+                return "I couldn't find any stories matching your request. Please try a different query."
+        
+        # Prepare stories data for the LLM
+        stories_text = "\n\n".join([
+            f"Story {i+1}:\n"
+            f"Title: {story.get('title', 'N/A')}\n"
+            f"URL: {story.get('url', f\"https://news.ycombinator.com/item?id={story.get('id')}\")}\n"
+            f"Score: {story.get('score', 0)} points\n"
+            f"Author: {story.get('by', 'unknown')}\n"
+            f"Comments: {story.get('descendants', 0)}\n"
+            f"Posted: {datetime.fromtimestamp(story.get('time', 0)).strftime('%Y-%m-%d %H:%M')}"
+            for i, story in enumerate(stories)
+        ])
+        
+        # Create context-aware prompt
+        context = f"User asked: '{query}'\n"
+        if topic:
+            context += f"They are looking for stories about: {topic}\n"
+        context += f"Found {len(stories)} relevant stories.\n\n"
+        
+        prompt = f"""{context}Stories from HackerNews:
+
+{stories_text}
+
+Please provide a natural, conversational response to the user's query. 
+- Be helpful and informative
+- Highlight the most interesting stories
+- Include relevant details (scores, comment counts)
+- Keep it concise but engaging
+- Use a friendly tone"""
+        
+        try:
+            user_message = UserMessage(text=prompt)
+            response = await self.conversational_agent.send_message(user_message)
+            return response
+        except Exception as e:
+            print(f"Error generating conversational response: {e}")
+            return "I found some stories but had trouble generating a response. Please try again."
     
     async def process_query(self, query: str) -> Dict:
         """Main method to process user queries"""
