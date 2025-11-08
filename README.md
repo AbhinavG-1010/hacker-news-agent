@@ -1,38 +1,48 @@
 # HackerNews AI Agent
 
-An intelligent AI agent that can handle natural language queries about HackerNews stories.
+An intelligent AI agent that handles natural language queries about HackerNews stories and responds in natural language.
 
-## Features
+## ✨ Key Features
 
-- **Natural Language Interface**: Ask questions in plain English
-- **Topic Search**: Find stories about specific topics
-- **Smart Summarization**: Get AI-generated summaries of top headlines
-- **Latest News**: Get the most recent stories
-- **Flexible Queries**: Supports various query formats
+- **🗣️ Natural Language Input & Output**: Ask questions in plain English, get conversational responses
+- **🔍 Topic Search**: Find stories about specific topics
+- **📝 Smart Summarization**: Get AI-generated summaries of top headlines
+- **📰 Latest News**: Get the most recent stories
+- **🤖 Conversational AI**: Powered by GPT-4o-mini for intelligent responses
 
-## API Endpoints
+## 🚀 API Endpoints
 
-### Main Agent Endpoint
+### 🔥 Conversational Agent (Recommended)
+```
+GET /api/agent/chat?q=<your_question>
+```
+Returns natural language response - perfect for direct interaction!
+
+### Structured Data (Optional)
 ```
 GET /api/agent/query?q=<your_question>
 ```
+Returns JSON data with structured story information.
 
-### Examples
+## 📖 Examples
 
-1. Search for specific topics:
+### 1. Topic Search (Conversational)
 ```bash
-curl "http://localhost:8001/api/agent/query?q=find%20latest%203%20news%20about%20AI"
+curl "http://localhost:8001/api/agent/chat?q=find%20latest%203%20news%20about%20AI"
 ```
+**Response:** Natural language summary of AI-related stories with details.
 
-2. Summarize headlines:
+### 2. Summarization
 ```bash
-curl "http://localhost:8001/api/agent/query?q=summarize%20biggest%20headlines%20today"
+curl "http://localhost:8001/api/agent/chat?q=summarize%20top%205%20headlines%20today"
 ```
+**Response:** Conversational overview of top headlines with key insights.
 
-3. Get latest stories:
+### 3. General Queries
 ```bash
-curl "http://localhost:8001/api/agent/query?q=top%2010%20stories"
+curl "http://localhost:8001/api/agent/chat?q=what%27s%20trending%20on%20hacker%20news"
 ```
+**Response:** Natural language description of trending stories.
 
 ## Setup
 
