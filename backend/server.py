@@ -349,16 +349,17 @@ async def root():
         "message": "HackerNews AI Agent API",
         "version": "2.0",
         "endpoints": {
-            "/api/agent/chat": "🔥 NEW! Conversational agent - natural language input & output",
+            "/agent": "🔥 Main conversational agent - natural language input & output (use query parameter)",
+            "/api/agent/chat": "Legacy conversational endpoint (use q parameter)",
             "/api/agent/query": "Structured agent endpoint - returns JSON data",
             "/api/health": "Health check endpoint"
         },
-        "recommended": "/api/agent/chat",
+        "recommended": "/agent?query=<your_question>",
         "examples": [
-            "find latest 3 news about AI",
-            "summarize biggest headlines today",
-            "what's new about python",
-            "top 10 stories"
+            "/agent?query=find latest 3 news about AI",
+            "/agent?query=summarize biggest headlines today",
+            "/agent?query=what's new about python",
+            "/agent?query=top 10 stories"
         ]
     }
 
