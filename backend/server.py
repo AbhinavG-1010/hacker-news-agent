@@ -368,18 +368,36 @@ async def health():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 
+@app.get("/agent")
+async def conversational_agent(query: str = Query(..., description="Natural language query for HackerNews")):
+    """
+    🔥 Main conversational agent endpoint - accepts natural language and returns natural language.
+    
+    This is the primary endpoint for direct interaction with the agent.
+    
+    Examples:
+    - /agent?query=find latest 3 news about AI
+    - /agent?query=summarize biggest headlines today
+    - /agent?query=what's new about python
+    - /agent?query=tell me about top stories today
+    """
+    try:
+        if not query or len(query.strip()) == 0:
+            raise HTTPException(status_code=400, detail="Query parameter 'query' is required")
+        
+        response = await agent.process_conversational_query(query)
+        return {"response": response, "query": query}
+        
+    except Exception as e:
+        print(f"Error processing query: {e}")
+        raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")
+
+
 @app.get("/api/agent/chat")
 async def chat_agent(q: str = Query(..., description="Natural language query for HackerNews")):
     """
-    🔥 Conversational agent endpoint - accepts natural language and returns natural language.
-    
-    This is the recommended endpoint for direct interaction with the agent.
-    
-    Examples:
-    - /api/agent/chat?q=find latest 3 news about AI
-    - /api/agent/chat?q=summarize biggest headlines today
-    - /api/agent/chat?q=what's new about python
-    - /api/agent/chat?q=tell me about top stories today
+    Legacy conversational agent endpoint (kept for backward compatibility).
+    Use /agent?query=... instead.
     """
     try:
         if not q or len(q.strip()) == 0:
