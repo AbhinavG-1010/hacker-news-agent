@@ -31,6 +31,15 @@ HN_API_BASE = "https://hacker-news.firebaseio.com/v0"
 EMERGENT_LLM_KEY = os.getenv("EMERGENT_LLM_KEY")
 
 
+# Request/Response Models
+class AgentRequest(BaseModel):
+    input: str
+
+
+class AgentResponse(BaseModel):
+    response: str
+
+
 class HackerNewsService:
     """Service to interact with HackerNews API"""
     
