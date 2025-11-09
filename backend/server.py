@@ -403,7 +403,7 @@ async def conversational_agent(request: AgentRequest):
     
     Response:
     {
-        "response": "natural language response from agent"
+        "output": "natural language response from agent"
     }
     
     Examples:
@@ -417,7 +417,7 @@ async def conversational_agent(request: AgentRequest):
             raise HTTPException(status_code=400, detail="Input field is required and cannot be empty")
         
         response_text = await agent.process_conversational_query(request.input)
-        return {"response": response_text}
+        return {"output": response_text}
         
     except Exception as e:
         print(f"Error processing query: {e}")
