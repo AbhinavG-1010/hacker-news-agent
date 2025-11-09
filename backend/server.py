@@ -37,7 +37,7 @@ class AgentRequest(BaseModel):
 
 
 class AgentResponse(BaseModel):
-    response: str
+    output: str
 
 
 class HackerNewsService:
