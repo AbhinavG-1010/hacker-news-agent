@@ -9,40 +9,66 @@ An intelligent AI agent that handles natural language queries about HackerNews s
 - **📝 Smart Summarization**: Get AI-generated summaries of top headlines
 - **📰 Latest News**: Get the most recent stories
 - **🤖 Conversational AI**: Powered by GPT-4o-mini for intelligent responses
+- **🔌 REST API**: Simple POST endpoint with JSON input/output
 
-## 🚀 API Endpoints
+## 🚀 API Endpoint
 
-### 🔥 Conversational Agent (Recommended)
+### 🔥 Main Agent Endpoint
 ```
-GET /api/agent/chat?q=<your_question>
+POST /api/agent
+Content-Type: application/json
 ```
-Returns natural language response - perfect for direct interaction!
 
-### Structured Data (Optional)
+**Request Body:**
+```json
+{
+  "input": "your natural language query"
+}
 ```
-GET /api/agent/query?q=<your_question>
+
+**Response Body:**
+```json
+{
+  "output": "natural language response from agent"
+}
 ```
-Returns JSON data with structured story information.
 
 ## 📖 Examples
 
-### 1. Topic Search (Conversational)
+### 1. Topic Search
 ```bash
-curl "http://localhost:8001/api/agent/chat?q=find%20latest%203%20news%20about%20AI"
+curl -X POST "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "find latest 3 news about AI"}'
 ```
-**Response:** Natural language summary of AI-related stories with details.
+
+**Response:**
+```json
+{
+  "output": "Here are the latest AI stories...\n\n1. **Story Title** (150 points, 45 comments)\n   Description..."
+}
+```
 
 ### 2. Summarization
 ```bash
-curl "http://localhost:8001/api/agent/chat?q=summarize%20top%205%20headlines%20today"
+curl -X POST "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "summarize top 5 headlines"}'
 ```
-**Response:** Conversational overview of top headlines with key insights.
 
-### 3. General Queries
+### 3. What's Trending
 ```bash
-curl "http://localhost:8001/api/agent/chat?q=what%27s%20trending%20on%20hacker%20news"
+curl -X POST "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "what is trending on hacker news"}'
 ```
-**Response:** Natural language description of trending stories.
+
+### 4. Top Stories
+```bash
+curl -X POST "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "top 3 stories"}'
+```
 
 ## 🛠️ Setup
 
