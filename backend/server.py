@@ -357,19 +357,29 @@ agent = HackerNewsAgent()
 async def root():
     return {
         "message": "HackerNews AI Agent API",
-        "version": "2.0",
+        "version": "2.1",
         "endpoints": {
-            "/api/agent": "🔥 Main conversational agent - natural language input & output (use query parameter)",
-            "/api/agent/chat": "Legacy conversational endpoint (use q parameter)",
-            "/api/agent/query": "Structured agent endpoint - returns JSON data",
-            "/api/health": "Health check endpoint"
+            "POST /api/agent": "🔥 Main conversational agent - natural language input & output",
+            "GET /api/agent/chat": "Legacy conversational endpoint (use q parameter)",
+            "GET /api/agent/query": "Structured agent endpoint - returns JSON data",
+            "GET /api/health": "Health check endpoint"
         },
-        "recommended": "/api/agent?query=<your_question>",
+        "recommended": "POST /api/agent",
+        "request_format": {
+            "method": "POST",
+            "url": "/api/agent",
+            "body": {
+                "input": "your natural language query"
+            }
+        },
+        "response_format": {
+            "response": "natural language response from agent"
+        },
         "examples": [
-            "/api/agent?query=find latest 3 news about AI",
-            "/api/agent?query=summarize biggest headlines today",
-            "/api/agent?query=what's new about python",
-            "/api/agent?query=top 10 stories"
+            {"input": "find latest 3 news about AI"},
+            {"input": "summarize biggest headlines today"},
+            {"input": "what's new about python"},
+            {"input": "top 10 stories"}
         ]
     }
 
