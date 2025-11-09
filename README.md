@@ -83,21 +83,27 @@ pip install -r requirements.txt --extra-index-url https://d33sy5i8bnduwe.cloudfr
 python server.py
 ```
 
+Or use supervisor:
+```bash
+sudo supervisorctl restart backend
+```
+
 ## 🎯 Technology Stack
 
 - **FastAPI**: Web framework
 - **HackerNews API**: Data source
 - **EmergentIntegrations**: LLM integration library
 - **GPT-4o-mini**: Natural language processing and generation
+- **Pydantic**: Request/response validation
 
 ## 🔄 How It Works
 
-1. **Input**: User sends natural language query
+1. **Input**: User sends POST request with natural language query in `input` field
 2. **Parse**: Agent analyzes query to understand intent (search/summarize/latest)
 3. **Fetch**: Retrieves relevant stories from HackerNews API
 4. **Filter**: Applies topic filtering if specified
 5. **Generate**: Creates natural language response using GPT-4o-mini
-6. **Output**: Returns conversational response
+6. **Output**: Returns conversational response in `output` field
 
 ## 💬 Query Types
 
@@ -108,40 +114,80 @@ The agent understands various query formats:
 - **Latest**: "top stories", "what's trending on hacker news"
 - **Custom**: "tell me about the most discussed topics today"
 
-## 📤 Response Format
+## 📤 API Format
 
-### Conversational Endpoint (`/api/agent/chat`)
+### Request Format
 ```json
 {
-  "response": "Natural language response with story details...",
-  "query": "original query"
+  "input": "your natural language query"
 }
 ```
 
-### Structured Endpoint (`/api/agent/query`)
+### Response Format
 ```json
 {
-  "query": "original query",
-  "intent": "search|summarize|latest",
-  "topic": "topic name or null",
-  "stories_count": 5,
-  "stories": [...],
-  "summary": "AI summary (if applicable)"
+  "output": "Natural language response with story details, scores, comments, links, and context"
 }
+```
+
+## 💻 Code Examples
+
+### Python
+```python
+import requests
+
+url = "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent"
+data = {"input": "find news about AI"}
+
+response = requests.post(url, json=data)
+print(response.json()["output"])
+```
+
+### JavaScript
+```javascript
+const response = await fetch(
+  "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ input: "top stories" })
+  }
+);
+
+const data = await response.json();
+console.log(data.output);
 ```
 
 ## 🧪 Testing
 
-Run the test script:
+Run the POST request test script:
 ```bash
-./test_agent.sh
+./test_post_agent.sh
 ```
 
 ## 🌐 Public Access
 
-**API URL**: `https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent/chat`
+**API Endpoint**: `https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent`
+
+**Method**: POST
 
 **Quick Test**:
 ```bash
-curl "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent/chat?q=top+stories"
+curl -X POST "https://9269b179-d7ec-4d7a-95e6-41cf0b7d4517.preview.emergentagent.com/api/agent" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "top 3 stories"}'
 ```
+
+## 📚 Documentation
+
+- **Complete API Guide**: See `/app/POST_API_GUIDE.md`
+- **Deployment Guide**: See `/app/DEPLOYMENT.md`
+
+## 🎓 Use Cases
+
+- **Telegram Bots**: Natural chat interface for HN updates
+- **Slack Integrations**: Team news digests
+- **Mobile Apps**: Backend for news applications
+- **CLI Tools**: Command-line HN interface
+- **Web Services**: Power web applications with HN data
+- **Voice Assistants**: Natural language HN queries
