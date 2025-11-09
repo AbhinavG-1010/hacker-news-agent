@@ -379,25 +379,35 @@ async def health():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 
-@app.get("/api/agent")
-async def conversational_agent(query: str = Query(..., description="Natural language query for HackerNews")):
+@app.post("/api/agent")
+async def conversational_agent(request: AgentRequest):
     """
     🔥 Main conversational agent endpoint - accepts natural language and returns natural language.
     
     This is the primary endpoint for direct interaction with the agent.
     
+    Request Body:
+    {
+        "input": "your natural language query"
+    }
+    
+    Response:
+    {
+        "response": "natural language response from agent"
+    }
+    
     Examples:
-    - /api/agent?query=find latest 3 news about AI
-    - /api/agent?query=summarize biggest headlines today
-    - /api/agent?query=what's new about python
-    - /api/agent?query=tell me about top stories today
+    - POST /api/agent with body: {"input": "find latest 3 news about AI"}
+    - POST /api/agent with body: {"input": "summarize biggest headlines today"}
+    - POST /api/agent with body: {"input": "what's new about python"}
+    - POST /api/agent with body: {"input": "tell me about top stories today"}
     """
     try:
-        if not query or len(query.strip()) == 0:
-            raise HTTPException(status_code=400, detail="Query parameter 'query' is required")
+        if not request.input or len(request.input.strip()) == 0:
+            raise HTTPException(status_code=400, detail="Input field is required and cannot be empty")
         
-        response = await agent.process_conversational_query(query)
-        return {"response": response, "query": query}
+        response_text = await agent.process_conversational_query(request.input)
+        return {"response": response_text}
         
     except Exception as e:
         print(f"Error processing query: {e}")
