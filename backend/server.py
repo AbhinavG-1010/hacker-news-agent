@@ -373,7 +373,7 @@ async def root():
             }
         },
         "response_format": {
-            "response": "natural language response from agent"
+            "output": "natural language response from agent"
         },
         "examples": [
             {"input": "find latest 3 news about AI"},
